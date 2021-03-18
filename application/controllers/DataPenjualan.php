@@ -58,7 +58,7 @@ class DataPenjualan extends CI_Controller
         $bebasongkir = $this->input->post('bebasongkir');
         $fee =  $this->PenjualanModel->get_fee_market($marketplace);
         if ($bebasongkir == "1") {
-            foreach ($fee as $f) {
+            foreach ($fee as $f) { 
                 $feeMarket = $f->fee;
                 $feebebasongkir = $f->fee_bebasngkir;
                 $potonganFeeBebas = ($jmlHargaJual * $feebebasongkir) / 100;
