@@ -14,9 +14,10 @@ class DataPenjualan extends CI_Controller
             $tahun = date('Y');
             $bulantahun = $bulan . $tahun;
         }
-        $data['penjualan'] = $this->db->query("SELECT a.* FROM data_penjualan a  where a.bulantahun='$bulantahun'
+        $user =  $this->session->userdata('nama_pegawai');
+        $data['penjualan'] = $this->db->query("SELECT a.* FROM data_penjualan a  where a.bulantahun='$bulantahun' and a.input_by='$user'
     ORDER BY a.tgl_penjualan ASC")->result();
-    $data['total'] = $this->db->query("SELECT sum(a.total_pendapatan) as tb,sum(a.jumlah_harga_jual-fee_marketplace) as tk FROM data_penjualan a  where a.bulantahun='$bulantahun' ")->result();
+        $data['total'] = $this->db->query("SELECT sum(a.total_pendapatan) as tb,sum(a.jumlah_harga_jual-fee_marketplace) as tk FROM data_penjualan a  where a.bulantahun='$bulantahun' and a.input_by='$user' ")->result();
         $this->load->view('templates_admin/header', $data);
         $this->load->view('templates_admin/sidebar');
         $this->load->view('dataPenjualan', $data);
@@ -54,14 +55,32 @@ class DataPenjualan extends CI_Controller
         $marketplace = $this->input->post('marketplace');
         $jmlHargaJual = $this->input->post('jmlHargaJual');
         $jmlHargaBeli = $this->input->post('jmlHargaBeli');
+        $bebasongkir = $this->input->post('bebasongkir');
         $fee =  $this->PenjualanModel->get_fee_market($marketplace);
-        foreach ($fee as $f) {
-            $feeMarket = $f->fee; 
-            $feeMarketarr = "$f->fee"; 
-            $potonganFee = ($jmlHargaJual * $feeMarket)/100; 
-            $totalPendapatan = ($jmlHargaJual - $jmlHargaBeli) - $potonganFee;
+        if ($bebasongkir == "1") {
+            foreach ($fee as $f) {
+                $feeMarket = $f->fee;
+                $feebebasongkir = $f->fee_bebasngkir;
+                $potonganFeeBebas = ($jmlHargaJual * $feebebasongkir) / 100;
+                $feemarket = ($jmlHargaJual * $feeMarket) / 100;
+                if ($potonganFeeBebas >= 10000) {
+                    $potonganFee = $feemarket + 10000;
+                } else {
+                    $potonganFee = $feemarket + $potonganFeeBebas;
+                }
+
+
+                $totalPendapatan = ($jmlHargaJual - $jmlHargaBeli) - $potonganFee;
+            }
+        } else {
+            foreach ($fee as $f) {
+                $feeMarket = $f->fee;
+                $potonganFee = ($jmlHargaJual * $feeMarket) / 100;
+                $totalPendapatan = ($jmlHargaJual - $jmlHargaBeli) - $potonganFee;
+            }
         }
-        $callback = array('fee' => $potonganFee, 'totalPendapatan'=>$totalPendapatan);
+
+        $callback = array('fee' => $potonganFee, 'totalPendapatan' => $totalPendapatan);
         echo json_encode($callback);
     }
 
@@ -72,13 +91,15 @@ class DataPenjualan extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->tambahData();
         } else {
-            $tanggal_dana_masuk = $this->input->post('tglDanaMasuk'); 
+            $status = $this->input->post('status');
+            $tanggal_dana_masuk = $this->input->post('tglDanaMasuk');
+            $invoice = $this->input->post('invoice');
             $nama_barang = $this->input->post('namaBarang');
             $total_item = $this->input->post('totalItem');
-            $harga_beli = $this->input->post('hargaBeli'); 
+            $harga_beli = $this->input->post('hargaBeli');
             $jml_HargaBeli = $this->input->post('jmlHargaBeli');
             $harga_jual = $this->input->post('hargaJual');
-            $jml_HargaJual = $this->input->post('jmlHargaJual'); 
+            $jml_HargaJual = $this->input->post('jmlHargaJual');
             $marketplace = $this->input->post('marketplace');
             $feeMarket = $this->input->post('feeMarket');
             $total_Pendapatan = $this->input->post('totalPendapatan');
@@ -86,27 +107,32 @@ class DataPenjualan extends CI_Controller
             $bulan =  date('m');
             $tahun = date('Y');
             $bulantahun = $bulan . $tahun;
+            $inputBy = $this->session->userdata('nama_pegawai');
             $data = array(
-                'tanggal_dana_masuk' =>$tanggal_dana_masuk, 
+                'Status' => $status,
+                'tanggal_dana_masuk' => $tanggal_dana_masuk,
+                'invoice' => $invoice,
                 'nama_barang' => $nama_barang,
                 'total_item' => $total_item,
                 'harga_beli' => $harga_beli,
-                'jumlah_harga_beli' => $jml_HargaBeli, 
+                'jumlah_harga_beli' => $jml_HargaBeli,
                 'harga_jual' => $harga_jual,
                 'jumlah_harga_jual' => $jml_HargaJual,
                 'marketplace' => $marketplace,
                 'fee_marketplace' => $feeMarket,
                 'total_pendapatan' => $total_Pendapatan,
                 'tgl_Penjualan' => $tgl_Penjualan,
-                'bulantahun' => $bulantahun
+                'bulantahun' => $bulantahun,
+                'input_by' => $inputBy
             );
-            $saldomarket = $jml_HargaJual-$feeMarket ;
+            $saldomarket = $jml_HargaJual - $feeMarket;
             $tanggal = date('Y-m-d');
-            $datasaldo= array(
-                'marketplace'=>$marketplace,
+            $datasaldo = array(
+                'marketplace' => $marketplace,
                 'saldo' => $saldomarket,
-                'keterangan'=> "saldo masuk",
-                'tanggal'=> $tanggal
+                'keterangan' => "saldo masuk",
+                'tanggal' => $tanggal,
+                'pegawai' => $inputBy
             );
             $this->PenjualanModel->insert_data($data, 'data_penjualan');
             $this->PenjualanModel->insert_data($datasaldo, 'data_saldo');
@@ -126,5 +152,6 @@ class DataPenjualan extends CI_Controller
         $this->form_validation->set_rules('totalItem', 'total item', 'required');
         $this->form_validation->set_rules('marketplace', 'marketplace', 'required');
         $this->form_validation->set_rules('tglPenjualan', 'tanggal penjualan', 'required');
+        $this->form_validation->set_rules('invoice', 'tanggal penjualan', 'required');
     }
 }

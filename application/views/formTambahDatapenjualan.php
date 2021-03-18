@@ -9,13 +9,28 @@
     <div class="card " style="width:50%;margin-bottom: 80px;">
         <div class="card-body">
             <form method="POST" action="<?php echo base_url('DataPenjualan/tambahDataAksi') ?>">
+                <div class="form-group" id="status">
+                    <label>Status</label>
+                    <select name="status" class="form-control" id="status">
+                        <option value="">--pilih Status--</option>
+                        <option value="1">Sudah Kirim</option>
+                        <option value="2">Sudah Sampai</option>
+                        <option value="3">Sudah Konfirmasi</option>
+                        <option value="4">Return</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Tanggal Dana Masuk</label>
                     <input type="date" name="tglDanaMasuk" id="tglDanaMasuk" class="form-control">
                     <?php echo form_error('tglDanaMasuk', '<div class="text-small text-danger"></div>') ?>
                 </div>
                 <div class="form-group">
-                    <label>nama_barang</label>
+                    <label>Invoice</label>
+                    <input type="text" name="invoice" id="invoice" class="form-control">
+                    <?php echo form_error('invoice', '<div class="text-small text-danger"></div>') ?>
+                </div>
+                <div class="form-group">
+                    <label>Nama Barang</label>
                     <select name="namaBarang" class="form-control" id="namaBarang">
                         <option value="">--pilih barang--</option>
                         <?php foreach ($barang as $b) : ?>
@@ -31,11 +46,11 @@
                 </div>
                 <div class="form-group">
                     <label>Harga Beli</label>
-                    <input type="text" name="hargaBeli" id="hargaBeli" class="form-control"  >
+                    <input type="text" name="hargaBeli" id="hargaBeli" class="form-control">
                 </div>
                 <div class="form-group">
                     <label>Jumlah Harga Beli</label>
-                    <input type="text" name="jmlHargaBeli" id="jmlHargaBeli" class="form-control"  >
+                    <input type="text" name="jmlHargaBeli" id="jmlHargaBeli" class="form-control">
                 </div>
                 <div class="form-group">
                     <label>Harga Jual</label>
@@ -55,13 +70,21 @@
                     </select>
                     <?php echo form_error('marketplace', '<div class="text-small text-danger"></div>') ?>
                 </div>
+                <div class="form-group" id="bebas">
+                    <label>Bebas ongkir</label>
+                    <select name="bebasong" class="form-control" id="bebasong">
+                        <option value="">--pilih bebas ongkir--</option>
+                        <option value="1">Yes</option>
+                        <option value="2">No</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Fee Market Place</label>
-                    <input type="text" name="feeMarket" id="feeMarket" class="form-control"  >
+                    <input type="text" name="feeMarket" id="feeMarket" class="form-control">
                 </div>
                 <div class="form-group">
                     <label>Total Pendapatan</label>
-                    <input type="text" name="totalPendapatan" id="totalPendapatan" class="form-control"  >
+                    <input type="text" name="totalPendapatan" id="totalPendapatan" class="form-control">
                 </div>
                 <div class="form-group">
                     <label>Tanggal Penjualan</label>
@@ -74,59 +97,7 @@
         </div>
     </div>
     <script src="<?php echo base_url() ?>assets/vendor/jquery/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#totalItem").change(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url("index.php/DataPenjualan/listHarga") ?>",
-                    data: {
-                        namaBarang: $("#namaBarang").val(),
-                        totalItem: $("#totalItem").val()
-                    },
-                    dataType: "json",
-                    beforeSend: function(e) {
-                        if (e && e.overrideMimeType) {
-                            e.overrideMimeType("application/json;charset=UTF-8")
-                        }
-                    },
-                    success: function(response) {
-                        $("#hargaBeli").val(response.harga_beli);
-                        $("#hargaJual").val(response.harga_jual);
-                        $("#jmlHargaBeli").val(response.jml_harga_beli);
-                        $("#jmlHargaJual").val(response.jml_harga_jual);
-                    },
-                    error: function(xhr, ajaxOptions, throwError) {
-                        alert(xhr.status + "\n" + xhr.responseText + "\n" + throwError);
-                    }
-                });
-            });
-            $("#marketplace").change(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url("index.php/DataPenjualan/feeMarket") ?>",
-                    data: {
-                        marketplace: $("#marketplace").val(),
-                        jmlHargaJual: $("#jmlHargaJual").val(),
-                        jmlHargaBeli: $("#jmlHargaBeli").val()
-                    },
-                    dataType: "json",
-                    beforeSend: function(e) {
-                        if (e && e.overrideMimeType) {
-                            e.overrideMimeType("application/json;charset=UTF-8")
-                        }
-                    },
-                    success: function(response) {
-                        $("#feeMarket").val(response.fee);
-                        $("#totalPendapatan").val(response.totalPendapatan);
-                    },
-                    error: function(xhr, ajaxOptions, throwError) {
-                        alert(xhr.status + "\n" + xhr.responseText + "\n" + throwError);
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="<?php echo base_url() ?>assets/js/TambahDatapenjualan.js"> </script>
 
 </div>
 <!--end Begin Page Content -->

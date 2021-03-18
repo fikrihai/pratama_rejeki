@@ -33,16 +33,15 @@ class PratamaModel extends CI_Model
     {
         $username = set_value('username');
         $password = set_value('password');
-
         $result = $this->db->where('username', $username)
             ->where('password', md5($password))
             ->limit(1)
             ->get('data_pegawai');
-            if($result->num_rows()>0){
-                var_dump($result);
-                return $result->row();
-            }else{
-                return FALSE;
-            }
+        if ($result->num_rows() > 0) {
+            var_dump($result);
+            return $result->row();
+        } else {
+            return FALSE;
+        }
     }
 }

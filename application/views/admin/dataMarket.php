@@ -17,6 +17,7 @@
                             <th class="text-center">No</th>
                             <th class="text-center">Marketplace</th>
                             <th class="text-center">fee</th>
+                            <th class="text-center">fee bebas ongkir</th>
                             <th class="text-center">Status Toko</th>
                             <th class="text-center">Action</th>
                         </tr>
@@ -28,6 +29,7 @@
                                 <td><?php echo $no++ ?></td>
                                 <td><?php echo $m->marketplace ?></td>
                                 <td><?php echo $m->fee ?> %</td>
+                                <td><?php echo $m->fee_bebasngkir ?> %</td>
                                 <?php if ($m->aktiv == '1') { ?>
                                     <td>Aktif</td>
                                 <?php } else { ?>
@@ -39,9 +41,7 @@
                                         <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?php echo base_url('admin/DataPegawai/deleteData/' . $m->id) ?>"><i class="fas fa-trash"></i></a>
                                     </center>
                                 </td>
-                            </tr>
-
-
+                            </tr> 
                         <?php endforeach; ?>
                     </tbody>
                 </table>

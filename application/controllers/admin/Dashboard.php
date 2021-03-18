@@ -13,11 +13,16 @@ class Dashboard extends CI_Controller{
     }  
     public function index(){
         $data['title'] ="Dashboard";
+        $user =  $this->session->userdata('nama_pegawai');
         $pegawai = $this->db->query("SELECT * FROM data_pegawai") ;
         $admin = $this->db->query("SELECT * FROM data_pegawai WHERE jabatan='Admin'") ;  
-        $data['tokped'] = $this->db->query("SELECT sum(saldo) as total FROM `data_saldo` where marketplace='tokopedia'")->result(); 
-        $data['shopee'] = $this->db->query("SELECT sum(saldo) as total FROM `data_saldo` where marketplace='shopee'")->result(); 
-        $data['bukalapak'] = $this->db->query("SELECT sum(saldo) as total FROM `data_saldo` where marketplace='bukalapak'")->result(); 
+        $data['tokped'] = $this->db->query("select saldo_masuk - saldo_keluar as total from  (select  (SELECT COALESCE(sum(saldo),0) as total FROM `data_saldo` where marketplace='tokopedia' and keterangan='saldo masuk' and pegawai = '$user') as saldo_masuk,
+        (SELECT COALESCE(sum(saldo),0) as total FROM `data_saldo` where marketplace='tokopedia' and keterangan='saldo keluar' and pegawai = '$user') as saldo_keluar) as a")->result(); 
+        $data['shopee'] = $this->db->query("select saldo_masuk - saldo_keluar as total from  (select  (SELECT COALESCE(sum(saldo),0) as total FROM `data_saldo` where marketplace='shopee' and keterangan='saldo masuk' and pegawai = '$user' ) as saldo_masuk,
+        (SELECT COALESCE(sum(saldo),0) as total FROM `data_saldo` where marketplace='shopee' and keterangan='saldo keluar' and pegawai = '$user' ) as saldo_keluar) as a")->result(); 
+        $data['bukalapak'] = $this->db->query("select saldo_masuk - saldo_keluar as total from  (select  (SELECT COALESCE(sum(saldo),0) as total FROM `data_saldo` where marketplace='bukalapak' and keterangan='saldo masuk' and pegawai = '$user') as saldo_masuk,
+        (SELECT COALESCE(sum(saldo),0) as total FROM `data_saldo` where marketplace='bukalapak' and keterangan='saldo keluar' and pegawai = '$user') as saldo_keluar) as a")->result(); 
+        $data['pendapatanbersih'] = $this->db->query("SELECT sum(a.`total_pendapatan`) as total FROM `data_penjualan` a")->result();
         $data['pegawai'] =$pegawai->num_rows();
         $data['admin'] =$admin->num_rows();   
         

@@ -6,7 +6,7 @@ class Datajabatan extends CI_Controller
     public function index()
     {
         $data['title'] = "Data Jabatan";
-        $data['jabatan'] = $this->PenggajianModel->get_data('data_jabatan')->result();
+        $data['jabatan'] = $this->PratamaModel->get_data('data_jabatan')->result();
         $this->load->view('templates_admin/header', $data);
         $this->load->view('templates_admin/sidebar');
         $this->load->view('admin/dataJabatan', $data);
@@ -39,7 +39,7 @@ class Datajabatan extends CI_Controller
                 'tj_transport' => $tj_transport,
                 'uang_makan' => $uang_makan
             );
-            $this->PenggajianModel->insert_data($data, 'data_jabatan');
+            $this->PratamaModel->insert_data($data, 'data_jabatan');
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Data Berhasil Ditambahkan</strong> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -87,7 +87,7 @@ class Datajabatan extends CI_Controller
             $where = array(
                 'id_jabatan' => $id
             );
-            $this->PenggajianModel->update_data($data, 'data_jabatan', $where);
+            $this->PratamaModel->update_data($data, 'data_jabatan', $where);
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Data Berhasil Diupdate</strong> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -108,7 +108,7 @@ class Datajabatan extends CI_Controller
     public function deleteData($id)
     {
         $where = array('id_jabatan' => $id);
-        $this->PenggajianModel->delete_data('data_jabatan', $where);
+        $this->PratamaModel->delete_data('data_jabatan', $where);
         $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Data Berhasil Dihapus</strong> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

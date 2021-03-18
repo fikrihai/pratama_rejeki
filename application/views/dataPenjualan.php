@@ -2,7 +2,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div class="d-sm-flex align-items-center justify-content-between mb-2">
         <h1 class="h3 mb-0 text-gray-800"><?php echo $title ?></h1>
     </div>
     <div class="card mb-3">
@@ -57,7 +57,7 @@
     }
 
     ?>
-    <div class="alert alert-info">
+    <div class=" alert alert-info">
         Menampilkan Data Penjualan Bulan: <span class="font-weight-bold"><?php echo $bulan ?></span> Tahun: <span class="font-weight-bold"><?php echo $tahun ?></span>
     </div>
 
@@ -65,54 +65,78 @@
 
     $jml_data = count($penjualan);
     if ($jml_data > 0) {
-
-
     ?>
-        <table class="table table-bordered mt-2 " style="margin-bottom: 100px;">
-            <tr>
-                <th class="text-center">NO</th>
-                <th class="text-center">Tanggal Dana Masuk</th>
-                <th class="text-center">Nama Barang</th>
-                <th class="text-center">Total Item</th>
-                <th class="text-center">harga Beli</th>
-                <th class="text-center">Jumlah Harga Beli</th>
-                <th class="text-center">Harga Jual</th>
-                <th class="text-center">Jumlah Harga Jual</th>
-                <th class="text-center">MarketPlace</th>
-                <th class="text-center">Fee MarketPlace</th>
-                <th class="text-center">Total Pendapatan</th>
-                <th class="text-center">Tanggal Penjualan</th>
-            <tr>
-                <?php $no = 1;
-                foreach ($penjualan as $p) : ?>
-            <tr>
-                <td><?php echo $no++ ?></td>
-                <td><?php echo $p->tanggal_dana_masuk ?></td>
-                <td><?php echo $p->nama_barang ?></td>
-                <td><?php echo $p->total_item ?></td>
-                <td>Rp.<?php echo number_format($p->harga_beli, 0, ',', '.') ?></td>
-                <td>Rp.<?php echo number_format($p->jumlah_harga_beli, 0, ',', '.') ?></td>
-                <td>Rp.<?php echo number_format($p->harga_jual, 0, ',', '.') ?></td>
-                <td>Rp.<?php echo number_format($p->jumlah_harga_jual, 0, ',', '.') ?></td>
-                <td><?php echo $p->marketplace ?></td>
-                <td>Rp.<?php echo number_format($p->fee_marketplace, 0, ',', '.') ?></td>
-                <td>Rp.<?php echo number_format($p->total_pendapatan, 0, ',', '.') ?></td>
-                <td><?php echo $p->tgl_penjualan ?></td>
-            </tr>
-        <?php endforeach; ?>
-        <?php foreach ($total as $tot) : ?>
-            <tr>
-                <th colspan="10">total pendapatan kotor</th>
-                <th colspan="10" class="text-center">Rp.<?php echo number_format($tot->tk, 0, ',', '.') ?></th>
-            </tr>
-            <tr>
-                <th colspan="10">total pendapatan bersih</th>
-                <th colspan="10" class="text-center">Rp.<?php echo number_format($tot->tb, 0, ',', '.') ?></th>
-            </tr>
 
-        <?php endforeach; ?>
+        <form class="form-inline mb-1">
+            <input id="myInput" type="text" placeholder="Search.." class="ml-auto">
+        </form>
+        <div class="card shadow" style="margin-bottom: 100px;">
+            <!--mulai table -->
+            <div class="card-body">
+                <div class="table-responsive-xl" style="overflow: auto;">
+                    <table  class="table table-bordered table-striped" width="100%" cellspacing="0">
+                        <thead >
+                            <tr class="bg-primary text-white"> 
+                                <th class="text-center">Status</th>
+                                <th class="text-center" >Tanggal Dana Masuk</th>
+                                <th class="text-center">invoice</th>
+                                <th class="text-center">Nama Barang</th>
+                                <th class="text-center">Jml Item</th>
+                                <th class="text-center">harga Beli</th>
+                                <th class="text-center">Jumlah Harga Beli</th>
+                                <th class="text-center">Harga Jual</th>
+                                <th class="text-center">Jumlah Harga Jual</th>
+                                <th class="text-center">MarketPlace</th>
+                                <th class="text-center">Fee MarketPlace</th>
+                                <th class="text-center">Total Pendapatan</th>
+                                <th class="text-center">Tanggal Penjualan</th>
+                            <tr>
+                        </thead>
+                        <tbody id="myTable">
+                            <?php $no = 1;
+                            foreach ($penjualan as $p) : ?>
+                                <tr> 
+                                    <?php if ($p->Status == '1') { ?>
+                                        <td>Sudah Kirim</td>
+                                    <?php } else if ($p->Status == '2') { ?>
+                                        <td>Sudah Sampai</td>
+                                    <?php } else if ($p->Status == '3') { ?>
+                                        <td>Sudah Konfrim</td>
+                                    <?php } else if ($p->Status == '4') { ?>
+                                        <td>Retur</td>
+                                    <?php } ?>
+                                    <td><?php echo $p->tanggal_dana_masuk ?></td>
+                                    <td><?php echo $p->invoice ?></td>
+                                    <td><?php echo $p->nama_barang ?></td>
+                                    <td><?php echo $p->total_item ?></td>
+                                    <td>Rp.<?php echo number_format($p->harga_beli, 0, ',', '.') ?></td>
+                                    <td>Rp.<?php echo number_format($p->jumlah_harga_beli, 0, ',', '.') ?></td>
+                                    <td>Rp.<?php echo number_format($p->harga_jual, 0, ',', '.') ?></td>
+                                    <td>Rp.<?php echo number_format($p->jumlah_harga_jual, 0, ',', '.') ?></td>
+                                    <td><?php echo $p->marketplace ?></td>
+                                    <td>Rp.<?php echo number_format($p->fee_marketplace, 0, ',', '.') ?></td>
+                                    <td>Rp.<?php echo number_format($p->total_pendapatan, 0, ',', '.') ?></td>
+                                    <td><?php echo $p->tgl_penjualan ?></td>
+                                </tr>
+                            <?php endforeach; ?>
 
-        </table>
+                            <?php foreach ($total as $tot) : ?>
+                                <tr>
+                                    <th colspan="10">total pendapatan kotor</th>
+                                    <th colspan="10" class="text-center">Rp.<?php echo number_format($tot->tk, 0, ',', '.') ?></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="10">total pendapatan bersih</th>
+                                    <th colspan="10" class="text-center">Rp.<?php echo number_format($tot->tb, 0, ',', '.') ?></th>
+                                </tr>
+
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--end table -->
     <?php
     } else { ?> <span class="badge badge-danger"><i class="fas fa-info-circle"></i> Data Masih Kosong, Silahkan input data penjualan pada bulan dan tahun yang ada pilih</span>
 
@@ -121,3 +145,14 @@
     ?>
 </div>
 <!--end Begin Page Content -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        }); 
+    });
+</script>

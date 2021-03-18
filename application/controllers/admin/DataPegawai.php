@@ -5,7 +5,7 @@ class DataPegawai extends CI_Controller
     public function index()
     {
         $data['title'] = "Data Pegawai";
-        $data['pegawai'] = $this->PenggajianModel->get_data('data_pegawai')->result();
+        $data['pegawai'] = $this->PratamaModel->get_data('data_pegawai')->result();
         $this->load->view('templates_admin/header', $data);
         $this->load->view('templates_admin/sidebar');
         $this->load->view('admin/dataPegawai', $data);
@@ -14,7 +14,7 @@ class DataPegawai extends CI_Controller
     public function tambahData()
     {
         $data['title'] = "Tambah Data Pegawai";
-        $data['jabatan'] = $this->PenggajianModel->get_data('data_jabatan')->result();
+        $data['jabatan'] = $this->PratamaModel->get_data('data_jabatan')->result();
         $this->load->view('templates_admin/header', $data);
         $this->load->view('templates_admin/sidebar');
         $this->load->view('admin/tambahDataPegawai', $data);
@@ -61,7 +61,7 @@ class DataPegawai extends CI_Controller
                 'hak_akses' => $hak_akses,
                 'photo' => $photo
             );
-            $this->PenggajianModel->insert_data($data, 'data_pegawai');
+            $this->PratamaModel->insert_data($data, 'data_pegawai');
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Data Berhasil Ditambahkan</strong> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -75,7 +75,7 @@ class DataPegawai extends CI_Controller
     public function updateData($id)
     {
         $where = array('id_jabatan' => $id);
-        $data['jabatan'] = $this->PenggajianModel->get_data('data_jabatan')->result();
+        $data['jabatan'] = $this->PratamaModel->get_data('data_jabatan')->result();
         $data['pegawai'] = $this->db->query("SELECT * FROM data_pegawai WHERE id_pegawai= '$id'")->result();
         $data['title'] = "Update Data Pegawai";
         $this->load->view('templates_admin/header', $data);
@@ -127,7 +127,7 @@ class DataPegawai extends CI_Controller
             $where = array(
                 'id_pegawai' => $id
             );
-            $this->PenggajianModel->update_data($data, 'data_pegawai', $where);
+            $this->PratamaModel->update_data($data, 'data_pegawai', $where);
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Data Berhasil Diupdate</strong> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -141,7 +141,7 @@ class DataPegawai extends CI_Controller
     public function deleteData($id)
     {
         $where = array('id_pegawai' => $id);
-        $this->PenggajianModel->delete_data('data_pegawai', $where);
+        $this->PratamaModel->delete_data('data_pegawai', $where);
         $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Data Berhasil Dihapus</strong> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

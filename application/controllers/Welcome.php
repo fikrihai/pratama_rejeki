@@ -12,8 +12,10 @@ class Welcome extends CI_Controller
 			$this->load->view('templates_admin/header', $data);
 			$this->load->view('form_login');
 		} else {
-			$username = $this->input->post('username');
-			$password = $this->input->post('password');
+			//$username = $this->input->post('username');
+			//$password = $this->input->post('password'); 
+			$username = 'fikri';
+			$password = 'admin'; 
 			$cek = $this->PratamaModel->cek_login($username, $password); 
 			if ($cek == FALSE) {
 				$this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">

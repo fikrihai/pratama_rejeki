@@ -26,6 +26,7 @@ class DataSaldo extends CI_Controller{
         if ($this->form_validation->run() == FALSE) {
             $this->tambahData();
         } else {
+            $user =  $this->session->userdata('nama_pegawai');
             $marketplace = $this->input->post('marketplace'); 
             $saldo = $this->input->post('saldo');
             $keterangan = $this->input->post('keterangan');
@@ -34,7 +35,8 @@ class DataSaldo extends CI_Controller{
                 'marketplace' =>$marketplace, 
                 'saldo' => $saldo,
                 'keterangan' => $keterangan,
-                'tanggal' => $tanggal
+                'tanggal' => $tanggal,
+                'pegawai'=>$user
             );
             $this->SaldoModel->insert_data($data, 'data_saldo');
             $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -64,6 +66,7 @@ class DataSaldo extends CI_Controller{
         if ($this->form_validation->run() == FALSE) {
             $this->updateData($id);
         } else {
+            $user =  $this->session->userdata('nama_pegawai');
             $id = $this->input->post('id');
             $marketplace = $this->input->post('marketplace'); 
             $saldo = $this->input->post('saldo');
@@ -73,7 +76,8 @@ class DataSaldo extends CI_Controller{
                 'marketplace' =>$marketplace, 
                 'saldo' => $saldo,
                 'keterangan' => $keterangan,
-                'tanggal' => $tanggal
+                'tanggal' => $tanggal,
+                'pegawai' => $user
             );
 
             $where = array(
